@@ -36,7 +36,7 @@ services:
     networks:
       - external
 
-  # Приложение дом ребенка
+  # Приложение дом ребенка #3
   orphanage-application:
     container_name: orphanage-application
     build:
