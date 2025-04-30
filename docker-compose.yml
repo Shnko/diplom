@@ -1,0 +1,56 @@
+name: orphanage
+
+services:
+
+  # Основная база данных
+  postgresql-master:
+    image: postgres:latest
+    container_name: postgresql-master
+    user: postgres
+    environment:
+      POSTGRES_USER: db
+      POSTGRES_PASSWORD: db
+      POSTGRES_DB: db
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256\nhost replication all 0.0.0.0/0 md5"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    command: |
+      postgres 
+      -c wal_level=replica 
+      -c hot_standby=on 
+      -c max_wal_senders=10 
+      -c max_replication_slots=10 
+      -c hot_standby_feedback=on
+      -c shared_preload_libraries='pg_stat_statements'
+      -c pg_stat_statements.max=10000
+      -c pg_stat_statements.track=all
+    volumes:
+      - ./docker/postgres/00_init.sql:/docker-entrypoint-initdb.d/00_init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d db -U db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - external
+
+  # Приложение
+  orphanage-application:
+    container_name: orphanage-application
+    build:
+      args:
+        - --force-recreate
+      dockerfile: docker/orphanage/Dockerfile
+    ports:
+      - "8080:8000"
+    depends_on:
+      postgresql-master:
+        condition: service_healthy
+    networks:
+      - external
+
+networks:
+  external:
+    driver: bridge

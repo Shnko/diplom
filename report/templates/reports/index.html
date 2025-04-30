@@ -1,0 +1,56 @@
+{% extends 'reports_base.html' %}
+
+{% block page_title %}Периодический Отчет{% endblock %}
+
+{% block breadcrubms %}
+<li class="breadcrumb-item"><a href="./../">Домой</a></li>
+<li class="breadcrumb-item active" aria-current="page">Отчётность</li>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Периодический отчёт</h4>
+        </div>
+        <div class="card-body">
+            <p>Создание периодического отчёта по организации.</p>
+            <form action="uploads/beds" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="reportStartDate">Дата начала отчётного периода</label>
+                    <input id="reportStartDate" class="form-control" type="date" />
+                </div>
+                <div class="mb-3">
+                    <label for="reportEndDate">Дата конца отчётного периода</label>
+                    <input id="reportEndDate" class="form-control" type="date" />
+                </div>
+                <button type="submit" class="btn btn-primary">Создать отчёт</button>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block additional_scripts %}
+    <script>
+    window.addEventListener('load', (event) => {
+        var reportStartDatePickerElement = document.getElementById('reportStartDate');
+        var reportEndDatePickerElement = document.getElementById('reportEndDate');
+
+        console.log(reportStartDatePickerElement);
+
+        var reportStartDatePicker = new bootstrap.Datepicker(reportStartDatePickerElement)
+        var reportEndDatePicker = new bootstrap.datepicker(reportEndDatePickerElement)
+
+
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        reportStartDatePicker.datepicker('setDate', today);
+        reportEndDatePicker.datepicker('setDate', today);
+    });
+    </script>
+{% endblock %}
+
