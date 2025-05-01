@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-01 05:41+0300\n"
+"POT-Creation-Date: 2025-05-01 12:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,9 +19,26 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
 #: .\core\apps.py:8
 msgid "Core data"
 msgstr "Основные данные"
+
+#: .\core\models.py:6
+msgid "first name"
+msgstr "имя"
+
+#: .\core\models.py:7
+msgid "last name"
+msgstr "фамилия"
+
+#: .\core\models.py:8
+msgid "patronymic"
+msgstr "отчество"
+
+#: .\core\models.py:9
+msgid "date of birth"
+msgstr "дата рождения"
 
 #: .\core\models.py:11
 msgid "child"
