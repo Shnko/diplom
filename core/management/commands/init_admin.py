@@ -12,3 +12,11 @@ class Command(BaseCommand):
             admin.is_admin = True
             admin.is_active = True
             admin.save()
+
+            elobova = User.objects.create_user('elobova', 'elobova@example.com', 'elobova')
+            elobova.is_admin = True
+            elobova.is_staff = True
+            elobova.is_active = True
+            elobova.first_name = 'Екатерина'
+            elobova.last_name = 'Лобова'
+            elobova.save()
