@@ -25,3 +25,13 @@ class ChildAdmission(models.Model):
     class Meta:
         verbose_name = _("child admission")
         verbose_name_plural = _("child admissions")
+
+class ChildDeath(models.Model):
+    """
+    Смерти детей
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_death = models.DateField(null=False, verbose_name=_("date of death"))
+
+    class Meta:
+        verbose_name = _("child death")
