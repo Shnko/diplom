@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.admin import ModelAdmin
 
-from core.models import Child, ChildAdmission, ChildDeath
+from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -47,10 +47,33 @@ class ChildAdmissionAdmin(ModelAdmin):
 
 @admin.register(ChildDeath)
 class ChildDeathAdmin(ModelAdmin):
-    list_display = ['id', 'get_child_name', 'date_of_death']
+    list_display = ['child_id', 'get_child_name', 'date_of_death', 'get_child_death_age']
 
     @admin.display(description=_('child name'))
     def get_child_name(self, obj):
         return f'{obj.child.last_name} {obj.child.first_name} {obj.child.patronymic}'
-    # def get_child_age(self, obj):
-    #     age = datetime.now() - Child.date_of_birth
+
+    @admin.display(description=_('child death age'))
+    def get_child_death_age(self, obj):
+        age = obj.date_of_death.year - obj.child.date_of_birth.year - (
+                (obj.date_of_death.month, obj.date_of_death.day) < (
+        obj.child.date_of_birth.month, obj.child.date_of_birth.day))
+        return age
+
+
+
+@admin.register(Employee)
+class EmployeeAdmin(ModelAdmin):
+    list_display = ['id', 'last_name', 'first_name', 'patronymic']
+    sortable_by = ('id', 'last_name', 'first_name', 'patronymic')
+
+
+@admin.register(Employment)
+class EmploymentAdmin(ModelAdmin):
+    list_display = ['employee_id', 'get_employee_name', 'position_name', 'report_category', 'rate', 'start_date_of_employment', 'end_date_of_employment']
+    sortable_by = ('id','rate', 'start_date_of_employment', 'end_date_of_employment' )
+
+    @admin.display(description=_('employee name'))
+    def get_employee_name(self, obj):
+        return f'{obj.employee.last_name} {obj.employee.first_name} {obj.employee.patronymic}'
+
