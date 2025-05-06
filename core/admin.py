@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.admin import ModelAdmin
 
-from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment
+from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildParent
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -61,7 +61,6 @@ class ChildDeathAdmin(ModelAdmin):
         return age
 
 
-
 @admin.register(Employee)
 class EmployeeAdmin(ModelAdmin):
     list_display = ['id', 'last_name', 'first_name', 'patronymic']
@@ -76,4 +75,3 @@ class EmploymentAdmin(ModelAdmin):
     @admin.display(description=_('employee name'))
     def get_employee_name(self, obj):
         return f'{obj.employee.last_name} {obj.employee.first_name} {obj.employee.patronymic}'
-

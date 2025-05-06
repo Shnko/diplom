@@ -20,7 +20,7 @@ class ChildAdmission(models.Model):
     Поступление
     """
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
-    date_of_admission = models.DateField(null=False, verbose_name=_("date of admission"))
+    date_of_admission = models.DateField(null=False, verbose_name="дата поступления")
 
     class Meta:
         verbose_name = _("child admission")
@@ -31,7 +31,7 @@ class ChildDeath(models.Model):
     Смерти детей
     """
     child = models.OneToOneField(Child, primary_key = True, on_delete=models.CASCADE)
-    date_of_death = models.DateField(null=False, verbose_name=_("date of death"))
+    date_of_death = models.DateField(null=False, verbose_name="дата смерти")
 
     class Meta:
         verbose_name = _("child death")
@@ -48,7 +48,7 @@ class Employee(models.Model):
         verbose_name = _("employee")
 
     def __str__(self):
-        return f"{self.id} - {self.first_name} {self.last_name}"
+        return f"{self.id} - {self.last_name} {self.first_name} {self.patronymic}"
 
 
 class Employment(models.Model):
@@ -73,5 +73,67 @@ class Employment(models.Model):
     end_date_of_employment = models.DateField(null=True, blank=True, verbose_name=_("end date of employment"))
 
     class Meta:
-        verbose_name = _("employment")
+        verbose_name = "трудоустройство"
 
+
+class ChildReturned(models.Model):
+    """
+    Дети, взятые родителями
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_adoption = models.DateField(null=False, verbose_name="Дата взятия родителями")
+    class Meta:
+        verbose_name = "ребёнок, взятый родителями"
+
+class ChildParent(models.Model):
+    """
+    Родители детей
+    """
+    returned = models.ForeignKey(ChildReturned, on_delete=models.CASCADE)
+    last_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("last name"))
+    first_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("first name"))
+    patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
+
+    class Meta:
+        verbose_name = "родители"
+
+    def __str__(self):
+        return f"{self.id} - {self.last_name} {self.first_name} {self.patronymic}"
+
+
+class ChildCare(models.Model):
+    """
+    Дети, которые были отданы под опеку или в приемную семью
+    """
+
+    class CareType(models.TextChoices):
+        WARDERED = "1", "Взято под опеку"
+        FOSTER_FAMILY = "2", "Взято приемной семьей"
+
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_adoption = models.DateField(null=False, verbose_name="Дата взятия в приемную семью или под опекунство")
+    care_type = models.CharField(choices=CareType, verbose_name="Тип попечительства")
+
+    class Meta:
+        verbose_name = "попечительство"
+
+
+class ChildAdopted(models.Model):
+    """
+    Усыновленные дети
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_adoption = models.DateField(null=False, verbose_name="Дата усыновления")
+
+
+class AdoptionParent(models.Model):
+    """
+    Приемные родители детей
+    """
+    adoption = models.ForeignKey(ChildAdopted, on_delete=models.CASCADE)
+    last_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("last name"))
+    first_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("first name"))
+    patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
+
+    class Meta:
+        verbose_name = "приемные родители"
