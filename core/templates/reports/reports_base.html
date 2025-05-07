@@ -1,0 +1,46 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load admin_urls i18n unfold %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script src="{% url 'admin:jsi18n' %}"></script>
+  {{ form.media }}
+{% endblock %}
+
+{% block breadcrumbs %}{% if not is_popup %}
+  <div class="px-4 lg:px-8">
+    <div class="container mb-6 mx-auto -my-3 lg:mb-12">
+      <ul class="flex flex-wrap">
+        {% url 'admin:index' as link %}
+        {% trans 'Home' as name %}
+        {% include 'unfold/helpers/breadcrumb_item.html' with link=link name=name %}
+
+        {% trans 'Отчёты' as name %}
+        {% url 'reports_index' as link %}
+        {% include 'unfold/helpers/breadcrumb_item.html' with link=link name=name %}
+        {% trans 'Отчёт 2120 - Перемещение контингента' as name %}
+        {% include 'unfold/helpers/breadcrumb_item.html' with link=None name=title %}
+      </ul>
+    </div>
+  </div>
+{% endif %}{% endblock %}
+
+{% block content %}
+  <form action="" method="post" novalidate>
+    <div class="aligned border border-base-200 mb-8 rounded-md pt-3 px-3 shadow-sm dark:border-base-800">
+      {% csrf_token %}
+
+      {% for field in form %}
+        {% include "unfold/helpers/field.html" with field=field %}
+      {% endfor %}
+
+    </div>
+
+    <div class="flex justify-end">
+      {% component "unfold/components/button.html" with submit=1 %}
+        {% trans "Сформировать отчёт" %}
+      {% endcomponent %}
+    </div>
+  </form>
+{% endblock %}

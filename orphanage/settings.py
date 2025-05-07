@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -138,11 +140,106 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # UNFOLD ADMIN SETTINGS
 # See https://unfoldadmin.com/docs/configuration/settings/
-
+# Icons here: https://fonts.google.com/icons
 UNFOLD = {
     "SITE_TITLE": "Дом Ребёнка",
     "SITE_HEADER": "Дом Ребёнка",
-    "SITE_SYMBOL": "house",  # symbol from icon set
+    "SITE_SYMBOL": "house",  # symbol from icon set https://fonts.google.com/icons
+    "SIDEBAR": {
+        "show_search": False,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "Отчётность",
+                "separator": True,  # Top border
+                "collapsible": False,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": "Отчёт по форме №41",
+                        "icon": "article",
+                        "link": reverse_lazy("report_summary"),
+
+                    },
+                    {
+                        #"title": "Отчёт 1000 - Дома ребёнка",
+                        "title": "Дома ребёнка",
+                        "icon": "article",
+                        "link": reverse_lazy("report_1000"),
+                    },
+                    {
+                        #"title": "Отчёт 2100 - Штаты организации",
+                        "title": "Штаты организации",
+                        "icon": "article",
+                        "link": reverse_lazy("report_2100"),
+                    },
+                    {
+                        #"title": "Отчёт 2120 - Контингенты дома ребёнка",
+                        "title": "Контингенты дома ребёнка",
+                        "icon": "article",
+                        "link": reverse_lazy("report_2120"),
+                    },
+                    {
+                        #"title": "Отчёт 2140 - Движение контингентов дома ребёнка",
+                        "title": "Движение контингентов",
+                        "icon": "article",
+                        "link": reverse_lazy("report_2140"),
+                    },
+                    {
+                        #"title": "Отчёт 2145 - Профилактические осмотры детей и их результаты",
+                        "title": "Профилактические осмотры",
+                        "icon": "article",
+                        "link": reverse_lazy("report_2145"),
+                    },
+                    {
+                        #"title": "Отчёт 2146 - Работа с контингентами детей, находящихся в доме ребёнка",
+                        "title": "Работа с контингентами детей",
+                        "icon": "article",
+                        "link": reverse_lazy("report_2146"),
+                    },
+                    {
+                        #"title": "Отчёт 2150 - Заболеваемость детей",
+                        "title": "Заболеваемость детей",
+                        "icon": "article",
+                        "link": reverse_lazy("report_2150"),
+                    },
+                ]
+            },
+            {
+                "title": "Редактирование",
+                "separator": True,  # Top border
+                "collapsible": False,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": "Контингент",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_child_changelist")
+                    },
+                    {
+                        "title": "Поступление контингента",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_childadmission_changelist")
+                    },
+                ]
+            },
+            {
+                "title": "Пользователи и группы",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": "Пользователи",
+                        "icon": "person",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                    {
+                        "title": "Группы",
+                        "icon": "people",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ]
+            },
+        ]
+    }
 }
 
 # UNFOLD = {
