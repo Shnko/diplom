@@ -9,6 +9,7 @@ class Child(models.Model):
     last_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("last name"))
     patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
     date_of_birth = models.DateField(null=False, verbose_name=_("date of birth"))
+    disability_category = models.IntegerField(null=False, blank=False, default=0, verbose_name="категория инвалидности")
     class Meta:
         verbose_name = _("child")
         verbose_name_plural = _("children")
@@ -34,7 +35,8 @@ class ChildDeath(models.Model):
     date_of_death = models.DateField(null=False, verbose_name="дата смерти")
 
     class Meta:
-        verbose_name = _("child death")
+        verbose_name = "смертность"
+        verbose_name_plural = "смертность"
 
 class Employee(models.Model):
     """
@@ -45,7 +47,8 @@ class Employee(models.Model):
     patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
 
     class Meta:
-        verbose_name = _("employee")
+        verbose_name = "сотрудники"
+        verbose_name_plural = "сотрудники"
 
     def __str__(self):
         return f"{self.id} - {self.last_name} {self.first_name} {self.patronymic}"
@@ -74,6 +77,7 @@ class Employment(models.Model):
 
     class Meta:
         verbose_name = "трудоустройство"
+        verbose_name_plural = "трудоустройство"
 
 
 class ChildReturned(models.Model):
@@ -84,6 +88,7 @@ class ChildReturned(models.Model):
     date_of_adoption = models.DateField(null=False, verbose_name="Дата взятия родителями")
     class Meta:
         verbose_name = "ребёнок, взятый родителями"
+        verbose_name_plural = "Дети, взятые родителями"
 
 class ChildParent(models.Model):
     """
@@ -95,7 +100,8 @@ class ChildParent(models.Model):
     patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
 
     class Meta:
-        verbose_name = "родители"
+        verbose_name = "родитель"
+        verbose_name_plural = "родители"
 
     def __str__(self):
         return f"{self.id} - {self.last_name} {self.first_name} {self.patronymic}"
@@ -116,6 +122,7 @@ class ChildCare(models.Model):
 
     class Meta:
         verbose_name = "попечительство"
+        verbose_name_plural = "попечительство"
 
 
 class ChildAdopted(models.Model):
@@ -125,6 +132,9 @@ class ChildAdopted(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     date_of_adoption = models.DateField(null=False, verbose_name="Дата усыновления")
 
+    class Meta:
+        verbose_name = "усыновленный ребёнок"
+        verbose_name_plural = "усыновленные дети"
 
 class AdoptionParent(models.Model):
     """
@@ -137,3 +147,72 @@ class AdoptionParent(models.Model):
 
     class Meta:
         verbose_name = "приемные родители"
+        verbose_name_plural = "приемные родители"
+
+class ChildRepatriation(models.Model):
+    """
+    Репатриация
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_repatriation = models.DateField(null=False, verbose_name="дата репатриации")
+    country = models.CharField(null=False, blank=False, max_length=100, verbose_name="страна репатриации")
+
+    class Meta:
+        verbose_name = "репатриация"
+        verbose_name_plural = "репатриация"
+
+
+class InternationalAdoption(models.Model):
+    """
+    Дети, отданные на международное усыновление
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_adoption = models.DateField(null=False, verbose_name="дата усыновления")
+    country = models.CharField(null=False, blank=False, max_length=100, verbose_name="страна переезда")
+    last_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("last name"))
+    first_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("first name"))
+    patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
+
+    class Meta:
+        verbose_name = "международное усыновление"
+        verbose_name_plural = "международное усыновление"
+
+class TransferToTreatment(models.Model):
+    """
+    Переведенные в медицинские организации
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_transfer = models.DateField(null=False, verbose_name="дата перевода")
+    organization = models.CharField(null=False, blank=False, max_length=100, verbose_name="название организации")
+    class Meta:
+        verbose_name = "перевод в медицинские организации"
+        verbose_name_plural = "перевод в медицинские организации"
+
+
+class TransferByCertainAge(models.Model):
+    """
+    Перевод в учреждения по достижению определенного возраста
+    """
+    class InstitutionType(models.TextChoices):
+        EDUCATION_INST = "1", "Образовательная организация"
+        SOCIAL_SAFE_INST = "2", "Организация социальной защиты населения"
+
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_transfer = models.DateField(null=False, verbose_name="дата перевода в учреждение")
+    type = models.CharField(choices=InstitutionType)
+
+    class Meta:
+        verbose_name = "Перевод в учреждения по достижению определенного возраста"
+        verbose_name_plural = "Перевод в учреждения по достижению определенного возраста"
+
+class SicknessRate(models.Model):
+    """
+    Заболеваемость детей
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    icd_code = models.CharField(null=False, blank=False, max_length=100, verbose_name="код диагноза по МКБ")
+    date_of_appointment = models.DateField(null=False, verbose_name="дата постановления диагноза")
+    class Meta:
+        verbose_name = "заболеваемость"
+        verbose_name_plural = "заболеваемости"
+
