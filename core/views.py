@@ -1,12 +1,14 @@
 import sys
 from inspect import isclass
 
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.urls import reverse
 from django.views.generic import FormView, TemplateView
 from unfold.views import UnfoldModelAdminViewMixin
 
 from core.forms import DateRangeInputForm
+from core.models import Child
+
 
 # Create your views here.
 class ReportsIndexView(UnfoldModelAdminViewMixin, TemplateView):
@@ -38,7 +40,10 @@ class ReportSummaryView(UnfoldModelAdminViewMixin, FormView):
         return reverse(self.reverse_name)
 
     def post(self, request, *args, **kwargs):
-        return FileResponse()
+        children= Child.objects.all()
+        children2= Child.objects.all()
+        print(children, children2)
+        return HttpResponse()
 
 class Report1000View(UnfoldModelAdminViewMixin, FormView):
     template_name = "reports/reports_base.html"

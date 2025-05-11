@@ -14,14 +14,19 @@ class Child(models.Model):
         verbose_name = _("child")
         verbose_name_plural = _("children")
     def __str__(self):
-        return f"{self.id} - {self.first_name} {self.last_name} [{self.date_of_birth}]"
+        return f"{self.id} - {self.last_name} {self.first_name} {self.patronymic} [{self.date_of_birth}]"
 
 class ChildAdmission(models.Model):
     """
     Поступление
     """
+    class AdmissionType(models.TextChoices):
+        ORPHAN = "1", "Сирота"
+        WITHOUT_CARE = "2", "Оставшийся без попечения родителей"
+
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     date_of_admission = models.DateField(null=False, verbose_name="дата поступления")
+    admission_type = models.CharField(choices=AdmissionType, verbose_name="причина поступления")
 
     class Meta:
         verbose_name = _("child admission")
@@ -215,4 +220,43 @@ class SicknessRate(models.Model):
     class Meta:
         verbose_name = "заболеваемость"
         verbose_name_plural = "заболеваемости"
+
+
+class Prevention(models.Model):
+    """
+    Профилактические осмотры
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    date_of_checkup = models.DateField(null=False, verbose_name="дата профилактического осмотра")
+    diagnosis = models.CharField(null=False, blank=False, max_length=100, verbose_name="диагноз")
+
+    class Meta:
+        verbose_name = "профилактические осмотры"
+        verbose_name_plural = "профилактические осмотры"
+
+
+class WorkWithContingents(models.Model):
+    """
+    Работа с контингентами
+    """
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    indicator_name = models.CharField(null=False, blank=False, max_length=100, verbose_name="наименование показателей")
+
+    class Meta:
+        verbose_name = "работа с контингентами"
+        verbose_name_plural = "работа с контингентами"
+
+
+class ChildrenHouse(models.Model):
+    """
+    Информация о доме ребенка
+    """
+    location = models.CharField(null=False, blank=False, max_length=100, verbose_name="местоположение")
+    count_of_seats = models.IntegerField(null=False, blank=False, default=0, verbose_name="количество мест")
+    days_start = models.DateField(null=False, verbose_name="")
+    days_end = models.DateField(null=False, verbose_name="")
+
+    class Meta:
+        verbose_name = "информация о доме ребенка"
+        verbose_name_plural = "информация о доме ребенка"
 
