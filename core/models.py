@@ -26,7 +26,7 @@ class ChildAdmission(models.Model):
 
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     date_of_admission = models.DateField(null=False, verbose_name="дата поступления")
-    admission_type = models.CharField(choices=AdmissionType, verbose_name="причина поступления")
+    admission_type = models.CharField(choices=AdmissionType, default="1", verbose_name="причина поступления")
 
     class Meta:
         verbose_name = _("child admission")
@@ -210,19 +210,36 @@ class TransferByCertainAge(models.Model):
         verbose_name = "Перевод в учреждения по достижению определенного возраста"
         verbose_name_plural = "Перевод в учреждения по достижению определенного возраста"
 
-class SicknessRate(models.Model):
+
+
+class WorkWithContingents(models.Model):
+    """
+    Работа с контингентами
+    """
+    icd_code = models.CharField(null=False, blank=False, max_length=100, verbose_name="код диагноза по МКБ")
+    indicator_name = models.CharField(null=False, blank=False, max_length=100, verbose_name="наименование показателей")
+
+    class Meta:
+        verbose_name = "работа с контингентами"
+        verbose_name_plural = "работа с контингентами"
+
+    def __str__(self):
+        return f"{self.id} - {self.indicator_name}"
+
+class ChildSickness(models.Model):
     """
     Заболеваемость детей
     """
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
-    icd_code = models.CharField(null=False, blank=False, max_length=100, verbose_name="код диагноза по МКБ")
-    date_of_appointment = models.DateField(null=False, verbose_name="дата постановления диагноза")
+    icd_code = models.ForeignKey(WorkWithContingents, on_delete=models.CASCADE)
+    date_of_diagnosis = models.DateField(null=False, verbose_name="дата постановления диагноза")
     class Meta:
         verbose_name = "заболеваемость"
         verbose_name_plural = "заболеваемости"
 
 
-class Prevention(models.Model):
+
+class Checkup(models.Model):
     """
     Профилактические осмотры
     """
@@ -235,26 +252,13 @@ class Prevention(models.Model):
         verbose_name_plural = "профилактические осмотры"
 
 
-class WorkWithContingents(models.Model):
-    """
-    Работа с контингентами
-    """
-    child = models.ForeignKey(Child, on_delete=models.CASCADE)
-    indicator_name = models.CharField(null=False, blank=False, max_length=100, verbose_name="наименование показателей")
 
-    class Meta:
-        verbose_name = "работа с контингентами"
-        verbose_name_plural = "работа с контингентами"
-
-
-class ChildrenHouse(models.Model):
+class Orphanage(models.Model):
     """
     Информация о доме ребенка
     """
-    location = models.CharField(null=False, blank=False, max_length=100, verbose_name="местоположение")
+    location_type = models.CharField(null=False, blank=False, max_length=100, verbose_name="местоположение")
     count_of_seats = models.IntegerField(null=False, blank=False, default=0, verbose_name="количество мест")
-    days_start = models.DateField(null=False, verbose_name="")
-    days_end = models.DateField(null=False, verbose_name="")
 
     class Meta:
         verbose_name = "информация о доме ребенка"

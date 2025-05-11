@@ -8,7 +8,7 @@ from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationFo
 from unfold.admin import ModelAdmin, TabularInline
 
 from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildParent, ChildCare, \
-    AdoptionParent, ChildAdopted, SicknessRate, TransferToTreatment, TransferByCertainAge
+    AdoptionParent, ChildAdopted, TransferToTreatment, TransferByCertainAge, ChildSickness
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -99,9 +99,9 @@ class ChildReturnedAdmin(ModelAdmin):
     list_display = ['child', 'date_of_adoption']
     inlines = [AdoptionParentInline]
 
-@admin.register(SicknessRate)
-class SicknessRateAdmin(ModelAdmin):
-    list_display = ['child', 'icd_code', 'date_of_appointment']
+@admin.register(ChildSickness)
+class ChildSicknessAdmin(ModelAdmin):
+    list_display = ['child', 'icd_code', 'date_of_diagnosis']
 
 @admin.register(TransferToTreatment)
 class TransferToTreatmentAdmin(ModelAdmin):

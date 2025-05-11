@@ -8,7 +8,7 @@ from unfold.views import UnfoldModelAdminViewMixin
 
 from core.forms import DateRangeInputForm
 from core.models import Child
-from core.reports import build_report_2120
+from core.reports import build_report_2120, build_report_summary
 
 
 # Create your views here.
@@ -41,10 +41,13 @@ class ReportSummaryView(UnfoldModelAdminViewMixin, FormView):
         return reverse(self.reverse_name)
 
     def post(self, request, *args, **kwargs):
-        children= Child.objects.all()
-        children2= Child.objects.all()
-        print(children, children2)
-        return HttpResponse()
+        form = DateRangeInputForm(request.POST)
+        if form.is_valid():
+            report_file_name = build_report_summary(form.cleaned_data['start'], form.cleaned_data['end'])
+            return FileResponse(open(report_file_name, 'rb'), as_attachment=True, filename=f'{self.title}.xlsx')
+        else:
+            return HttpResponseRedirect('#')
+
 
 class Report1000View(UnfoldModelAdminViewMixin, FormView):
     template_name = "reports/reports_base.html"
