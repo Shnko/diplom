@@ -1,13 +1,14 @@
 import sys
 from inspect import isclass
 
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import FormView, TemplateView
 from unfold.views import UnfoldModelAdminViewMixin
 
 from core.forms import DateRangeInputForm
 from core.models import Child
+from core.reports import build_report_2120
 
 
 # Create your views here.
@@ -74,6 +75,15 @@ class Report2120View(UnfoldModelAdminViewMixin, FormView):
 
     def get_success_url(self):
         return reverse(self.reverse_name)
+
+    def post(self, request, *args, **kwargs):
+        form = DateRangeInputForm(request.POST)
+        if form.is_valid():
+            report_file_name = build_report_2120(form.cleaned_data['start'], form.cleaned_data['end'])
+            return FileResponse(open(report_file_name, 'rb'), as_attachment=True, filename=f'{self.title}.xlsx')
+        else:
+            return HttpResponseRedirect('#')
+
 
 class Report2140View(UnfoldModelAdminViewMixin, FormView):
     template_name = "reports/reports_base.html"

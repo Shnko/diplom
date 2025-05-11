@@ -151,7 +151,7 @@ UNFOLD = {
         "navigation": [
             {
                 "title": "Отчётность",
-                "separator": True,  # Top border
+                "separator": False,  # Top border
                 "collapsible": False,  # Collapsible group of links
                 "items": [
                     {
