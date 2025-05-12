@@ -9,7 +9,7 @@ from unfold.admin import ModelAdmin, TabularInline
 
 from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildParent, ChildCare, \
     AdoptionParent, ChildAdopted, TransferToTreatment, TransferByCertainAge, ChildSickness, ChildRepatriation, \
-    InternationalAdoption, Orphanage
+    InternationalAdoption, Orphanage, Checkup
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -112,10 +112,6 @@ class ChildReturnedAdmin(ModelAdmin):
 class ChildRepatriationAdmin(ModelAdmin):
     list_display = ['child', 'date_of_repatriation']
 
-@admin.register(ChildSickness)
-class ChildSicknessAdmin(ModelAdmin):
-    list_display = ['child', 'icd_code', 'date_of_diagnosis']
-
 @admin.register(TransferToTreatment)
 class TransferToTreatmentAdmin(ModelAdmin):
     list_display = ['child', 'date_of_transfer', 'organization']
@@ -127,6 +123,15 @@ class TransferByCertainAgeAdmin(ModelAdmin):
 @admin.register(InternationalAdoption)
 class InternationalAdoptionAdmin(ModelAdmin):
     list_display = ['child', 'date_of_adoption']
+
+@admin.register(ChildSickness)
+class ChildSicknessAdmin(ModelAdmin):
+    list_display = ['child', 'icd_code', 'date_of_diagnosis']
+
+@admin.register(Checkup)
+class CheckupAdmin(ModelAdmin):
+    list_display = ['child', 'date_of_checkup', 'diagnosis']
+
 
 @admin.register(Orphanage)
 class OrphanageAdmin(ModelAdmin):

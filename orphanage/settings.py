@@ -278,6 +278,23 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "Заболевания",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Заболеваемость детей",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_childsickness_changelist")
+                    },
+                    {
+                        "title": "Профилактика детей",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_checkup_changelist")
+                    },
+                ]
+            },
+            {
                 "title": "Общая информация",
                 "separator": True,
                 "collapsible": False,

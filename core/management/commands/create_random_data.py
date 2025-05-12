@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 from django.core.management import BaseCommand
 
 from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildCare, ChildAdopted, \
-    ChildRepatriation, InternationalAdoption, TransferToTreatment, TransferByCertainAge, Orphanage
+    ChildRepatriation, InternationalAdoption, TransferToTreatment, TransferByCertainAge, Orphanage, ChildSickness, \
+    Checkup
 from orphanage.settings import DEBUG
 
 
@@ -106,7 +107,18 @@ def create_children():
             TransferByCertainAge.objects.create(child=child,
                                                 date_of_transfer=child.date_of_birth + timedelta(days = 364*3),
                                                 type=str(random.randint(1, 2)))
+        # Заболевания
+        if random.randint(0, 99) <= 80: # 80%
+            for i in range(0, random.randint(1, 3)):
+                ChildSickness.objects.create(child=child,
+                                             icd_code=get_random_icd_code(),
+                                             date_of_diagnosis=get_random_date_between(admission.date_of_admission, today))
 
+        # Профилактика
+        if random.randint(0, 99) <= 80: # 80%
+            Checkup.objects.create(child=child,
+                                   date_of_checkup=get_random_date_between(admission.date_of_admission, today),
+                                   diagnosis=str(random.randint(1, 10)))
 
 def create_employees():
     employees_count = random.randint(100, 110)
@@ -145,6 +157,11 @@ FEMALE_LAST_NAMES = {"Иванова", "Петрова", "Андреева", "В
                      "Николаева", "Романова"}
 FEMALE_NAMES = sorted(itertools.product(FEMALE_FIRST_NAME, FEMALE_MIDDLE_NAMES, FEMALE_LAST_NAMES))
 
+
+def get_random_icd_code():
+    letter = random.choice('ABCDEFGHIJKLMNOPQRSTU')
+    code = random.randint(0, 100)
+    return f'{letter:03}{code}'
 
 def get_random_names(males, females):
     return random.sample(MALE_NAMES, males) + random.sample(FEMALE_NAMES, females)
