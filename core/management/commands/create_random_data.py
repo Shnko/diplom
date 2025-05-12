@@ -161,7 +161,7 @@ FEMALE_NAMES = sorted(itertools.product(FEMALE_FIRST_NAME, FEMALE_MIDDLE_NAMES, 
 def get_random_icd_code():
     letter = random.choice('ABCDEFGHIJKLMNOPQRSTU')
     code = random.randint(0, 100)
-    return f'{letter:03}{code}'
+    return f'{letter}{code:02}'
 
 def get_random_names(males, females):
     return random.sample(MALE_NAMES, males) + random.sample(FEMALE_NAMES, females)
