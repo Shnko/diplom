@@ -35,11 +35,11 @@ class ChildDeathInline(TabularInline):
 
 @admin.register(Child)
 class ChildAdmin(ModelAdmin):
-    list_display = ['id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'disability_category', 'death_date']
+    list_display = ['last_name', 'first_name', 'patronymic', 'date_of_birth', 'disability_category', 'death_date']
     actions_on_top = True
     search_fields = ['first_name', 'last_name', 'patronymic']
     list_filter = ['date_of_birth', 'disability_category', 'childdeath__date_of_death']
-    sortable_by = ('id', 'first_name', 'last_name', 'patronymic', 'date_of_birth')
+    sortable_by = ('first_name', 'last_name', 'patronymic', 'date_of_birth')
     inlines = [ChildDeathInline]
 
     @admin.display(description="Дата смерти")
@@ -48,16 +48,16 @@ class ChildAdmin(ModelAdmin):
 
 @admin.register(ChildAdmission)
 class ChildAdmissionAdmin(ModelAdmin):
-    list_display = ['id', 'get_child_name', 'date_of_admission']
+    list_display = ['get_child_name', 'date_of_admission']
 
-    @admin.display(description=_('child name'))
+    @admin.display(description='ребёнок')
     def get_child_name(self, obj):
         return f'{obj.child.last_name} {obj.child.first_name} {obj.child.patronymic}'
 
 
 @admin.register(ChildDeath)
 class ChildDeathAdmin(ModelAdmin):
-    list_display = ['child_id', 'get_child_name', 'date_of_death', 'get_child_death_age']
+    list_display = ['get_child_name', 'date_of_death', 'get_child_death_age']
 
     @admin.display(description=_('child name'))
     def get_child_name(self, obj):
@@ -73,17 +73,17 @@ class ChildDeathAdmin(ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(ModelAdmin):
-    list_display = ['id', 'last_name', 'first_name', 'patronymic']
-    sortable_by = ('id', 'last_name', 'first_name', 'patronymic')
+    list_display = ['last_name', 'first_name', 'patronymic']
+    sortable_by = ('last_name', 'first_name', 'patronymic')
 
 
 @admin.register(Employment)
 class EmploymentAdmin(ModelAdmin):
-    list_display = ['employee_id', 'get_employee_name', 'report_category', 'rate', 'start_date_of_employment', 'end_date_of_employment']
-    sortable_by = ('id','rate', 'start_date_of_employment', 'end_date_of_employment' )
+    list_display = ['get_employee_name', 'report_category', 'rate', 'start_date_of_employment', 'end_date_of_employment']
+    sortable_by = ('rate', 'start_date_of_employment', 'end_date_of_employment' )
 
 
-    @admin.display(description=_('employee name'))
+    @admin.display(description='ФИО сотрудника')
     def get_employee_name(self, obj):
         return f'{obj.employee.last_name} {obj.employee.first_name} {obj.employee.patronymic}'
 

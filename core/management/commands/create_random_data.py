@@ -41,7 +41,7 @@ def create_children():
     today = datetime.today()
 
     # дом ребёнка
-    Orphanage.objects.create(location_type="X", count_of_seats=(male_count+female_count)//2)
+    Orphanage.objects.create(location_type="Загребский б-р, 42, Санкт-Петербург, 192283", count_of_seats=(male_count+female_count)//2)
 
     for full_name in children_names:
         # Ребёнок
@@ -88,8 +88,7 @@ def create_children():
         elif random.randint(0, 99) <= 10:  # 10% оставшихся
             ChildRepatriation.objects.create(child=child,
                                              date_of_repatriation=get_random_date_between(admission.date_of_admission,
-                                                                                          today),
-                                             country="X")
+                                                                                          today))
         # международное усыновление
         elif random.randint(0, 99) <= 5:  # 5% оставшихся
             InternationalAdoption.objects.create(child=child,
@@ -100,7 +99,7 @@ def create_children():
             TransferToTreatment.objects.create(child=child,
                                                date_of_transfer=get_random_date_between(admission.date_of_admission,
                                                                                         today),
-                                               organization="X")
+                                               organization=get_random_organization())
         # Переведенные по достижению определённого возраста
         age = today.year - child.date_of_birth.year - ((today.month, today.day) < (child.date_of_birth.month, child.date_of_birth.day))
         if age >= 3:
@@ -141,6 +140,7 @@ def create_employees():
                                                                         today)
         employment.save()
 
+ORGANIZATIONS = ["Центр содействия семейному воспитанию №2", "Центр содействия семейному воспитанию №4", "Центр содействия семейному воспитанию №8", "Специализированный дом ребёнка № 12 (психоневрологический)", "Детский дом № 7 коррекционный, школьно-дошкольный"]
 
 MALE_FIRST_NAMES = {"Иван", "Петр", "Андрей", "Василий", "Семён", "Антон", "Владимир", "Геннадий", "Николай", "Роман"}
 MALE_MIDDLE_NAMES = {"Иванович", "Петрович", "Андреевич", "Василиевич", "Семёнович", "Антонович", "Владимирович",
@@ -157,6 +157,8 @@ FEMALE_LAST_NAMES = {"Иванова", "Петрова", "Андреева", "В
                      "Николаева", "Романова"}
 FEMALE_NAMES = sorted(itertools.product(FEMALE_FIRST_NAME, FEMALE_MIDDLE_NAMES, FEMALE_LAST_NAMES))
 
+def get_random_organization():
+    return random.choice(ORGANIZATIONS)
 
 def get_random_icd_code():
     letter = random.choice('ABCDEFGHIJKLMNOPQRSTU')
