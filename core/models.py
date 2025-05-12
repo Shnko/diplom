@@ -75,7 +75,6 @@ class Employment(models.Model):
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     rate = models.DecimalField(null=False, blank=False, max_digits=4, decimal_places=2, verbose_name=_("working rate"))
-    position_name = models.CharField(null=False, blank=False, max_length=100, verbose_name="Должности")
     report_category = models.CharField(choices=PositionCategory)
     start_date_of_employment = models.DateField(null=False, verbose_name=_("start date of employment"))
     end_date_of_employment = models.DateField(null=True, blank=True, verbose_name=_("end date of employment"))

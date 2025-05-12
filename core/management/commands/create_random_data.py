@@ -116,7 +116,6 @@ def create_employees():
                                          k=1)[0]
         employment = Employment(employee=employee,
                                 rate=employment_rate,
-                                position_name="X",
                                 report_category=str(random.randint(1, 8)),
                                 start_date_of_employment=today - timedelta(
                                     days=random.randint(100, 360 * 3)),

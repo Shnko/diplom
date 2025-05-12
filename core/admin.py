@@ -70,7 +70,7 @@ class EmployeeAdmin(ModelAdmin):
 
 @admin.register(Employment)
 class EmploymentAdmin(ModelAdmin):
-    list_display = ['employee_id', 'get_employee_name', 'position_name', 'report_category', 'rate', 'start_date_of_employment', 'end_date_of_employment']
+    list_display = ['employee_id', 'get_employee_name', 'report_category', 'rate', 'start_date_of_employment', 'end_date_of_employment']
     sortable_by = ('id','rate', 'start_date_of_employment', 'end_date_of_employment' )
 
 
