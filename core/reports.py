@@ -54,10 +54,10 @@ def build_report_summary(start, end):
     spreadsheet = workbook.active
 
     # заполнение данных в таблицу
-    spreadsheet["A8"].value=1
+    spreadsheet["A6"].value=1
     orphanage = Orphanage.objects.first()
-    spreadsheet["C8"].value=1
-    spreadsheet["D8"].value=orphanage.count_of_seats
+    spreadsheet["B6"].value=1
+    spreadsheet["D6"].value=orphanage.count_of_seats
 
     # сохранение файла во временный файл
     workbook.save(destination)

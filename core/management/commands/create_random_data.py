@@ -41,7 +41,8 @@ def create_children():
     today = datetime.today()
 
     # дом ребёнка
-    Orphanage.objects.create(location_type="Загребский б-р, 42, Санкт-Петербург, 192283", count_of_seats=(male_count+female_count)//2)
+    Orphanage.objects.create(location_type="Загребский б-р, 42, Санкт-Петербург, 192283",
+                             count_of_seats=(male_count + female_count) // 2)
 
     for full_name in children_names:
         # Ребёнок
@@ -101,23 +102,26 @@ def create_children():
                                                                                         today),
                                                organization=get_random_organization())
         # Переведенные по достижению определённого возраста
-        age = today.year - child.date_of_birth.year - ((today.month, today.day) < (child.date_of_birth.month, child.date_of_birth.day))
+        age = today.year - child.date_of_birth.year - (
+                (today.month, today.day) < (child.date_of_birth.month, child.date_of_birth.day))
         if age >= 3:
             TransferByCertainAge.objects.create(child=child,
-                                                date_of_transfer=child.date_of_birth + timedelta(days = 364*3),
+                                                date_of_transfer=child.date_of_birth + timedelta(days=364 * 3),
                                                 type=str(random.randint(1, 2)))
         # Заболевания
-        if random.randint(0, 99) <= 80: # 80%
+        if random.randint(0, 99) <= 80:  # 80%
             for i in range(0, random.randint(1, 3)):
                 ChildSickness.objects.create(child=child,
                                              icd_code=get_random_icd_code(),
-                                             date_of_diagnosis=get_random_date_between(admission.date_of_admission, today))
+                                             date_of_diagnosis=get_random_date_between(admission.date_of_admission,
+                                                                                       today))
 
         # Профилактика
-        if random.randint(0, 99) <= 80: # 80%
+        if random.randint(0, 99) <= 80:  # 80%
             Checkup.objects.create(child=child,
                                    date_of_checkup=get_random_date_between(admission.date_of_admission, today),
                                    diagnosis=str(random.randint(1, 10)))
+
 
 def create_employees():
     employees_count = random.randint(100, 110)
@@ -140,30 +144,58 @@ def create_employees():
                                                                         today)
         employment.save()
 
-ORGANIZATIONS = ["Центр содействия семейному воспитанию №2", "Центр содействия семейному воспитанию №4", "Центр содействия семейному воспитанию №8", "Специализированный дом ребёнка № 12 (психоневрологический)", "Детский дом № 7 коррекционный, школьно-дошкольный"]
 
-MALE_FIRST_NAMES = {"Иван", "Петр", "Андрей", "Василий", "Семён", "Антон", "Владимир", "Геннадий", "Николай", "Роман"}
+ORGANIZATIONS = ["Центр содействия семейному воспитанию №2", "Центр содействия семейному воспитанию №4",
+                 "Центр содействия семейному воспитанию №8",
+                 "Специализированный дом ребёнка № 12 (психоневрологический)",
+                 "Детский дом № 7 коррекционный, школьно-дошкольный"]
+
+MALE_FIRST_NAMES = {"Иван", "Петр", "Андрей", "Василий", "Семён", "Антон", "Владимир", "Геннадий", "Николай", "Роман",
+                    "Арсений",
+                    "Ярослав", "Дмитрий", "Александр", "Валентин", "Вячеслав", "Сергей", "Владимир", "Михаил",
+                    "Афанасий", "Константин", "Матвей"}
 MALE_MIDDLE_NAMES = {"Иванович", "Петрович", "Андреевич", "Василиевич", "Семёнович", "Антонович", "Владимирович",
-                     "Геннадиевич", "Николаевич", "Романович"}
-MALE_LAST_NAMES = {"Иванов", "Петров", "Андреев", "Васильев", "Семёнов", "Антонов", "Владимиров", "Геннадьев",
-                   "Николаев", "Романов"}
+                     "Геннадиевич", "Николаевич", "Романович", "Арсеньевич", "Ярославович", "Дмитриевич",
+                     "Александрович", "Вячеславович", "Сергеевич", "Владимирович", "Михайлович", "Афанасьевич",
+                     "Константинович", "Матвеевич"}
+MALE_LAST_NAMES = {"Иванов", "Петров", "Сидоров", "Кузнецов", "Смирнов",
+                   "Попов", "Васильев", "Павлов", "Семёнов", "Голубев",
+                   "Виноградов", "Богданов", "Воробьёв", "Фёдоров", "Михайлов",
+                   "Беляев", "Тарасов", "Белов", "Комаров", "Орлов",
+                   "Киселёв", "Макаров", "Андреев", "Ковалёв", "Гусев",
+                   "Титов", "Марков", "Крылов", "Фролов", "Алексеев"}
 MALE_NAMES = sorted(itertools.product(MALE_FIRST_NAMES, MALE_MIDDLE_NAMES, MALE_LAST_NAMES))
 
-FEMALE_FIRST_NAME = {"Елена", "Анна", "Ольга", "Екатерина", "Вера", "Надежда", "Любовь", "Ксения", "Светлана",
-                     "Татьяна"}
-FEMALE_MIDDLE_NAMES = {"Ивановна", "Петровна", "Андреевна", "Василиевна", "Семёновна", "Антоновна", "Владимировна",
-                       "Геннадиевна", "Николаевна", "Романовна"}
-FEMALE_LAST_NAMES = {"Иванова", "Петрова", "Андреева", "Васильева", "Семёнова", "Антонова", "Владимирова", "Геннадьева",
-                     "Николаева", "Романова"}
+FEMALE_FIRST_NAME = {"Анна", "Мария", "Елена", "Ольга", "Наталья",
+                     "Ирина", "Татьяна", "Екатерина", "Светлана", "Александра",
+                     "Юлия", "Анастасия", "Дарья", "Ксения", "Евгения",
+                     "Вера", "Людмила", "Галина", "Валентина", "София",
+                     "Алина", "Маргарита", "Виктория", "Полина", "Валерия",
+                     "Ангелина", "Кристина", "Диана", "Яна", "Инна", "Полина"}
+FEMALE_MIDDLE_NAMES = {"Иванова", "Петрова", "Сидорова", "Кузнецова", "Смирнова",
+                       "Попова", "Васильева", "Павлова", "Семёнова", "Голубева",
+                       "Виноградова", "Богданова", "Воробьёва", "Фёдорова", "Михайлова",
+                       "Беляева", "Тарасова", "Белова", "Комарова", "Орлова",
+                       "Киселёва", "Макарова", "Андреева", "Ковалёва", "Гусева",
+                       "Титова", "Маркова", "Крылова", "Фролова", "Алексеева"}
+FEMALE_LAST_NAMES = {"Александровна", "Андреевна", "Борисовна", "Валерьевна", "Викторовна",
+                     "Владимировна", "Дмитриевна", "Евгеньевна", "Ивановна", "Игоревна",
+                     "Константиновна", "Максимовна", "Михайловна", "Николаевна", "Олеговна",
+                     "Павловна", "Романовна", "Сергеевна", "Станиславовна", "Тимофеевна",
+                     "Фёдоровна", "Юрьевна", "Артёмовна", "Васильевна", "Геннадьевна",
+                     "Даниловна", "Егоровна", "Захаровна", "Леонидовна", "Степановна"}
 FEMALE_NAMES = sorted(itertools.product(FEMALE_FIRST_NAME, FEMALE_MIDDLE_NAMES, FEMALE_LAST_NAMES))
+
 
 def get_random_organization():
     return random.choice(ORGANIZATIONS)
+
 
 def get_random_icd_code():
     letter = random.choice('ABCDEFGHIJKLMNOPQRSTU')
     code = random.randint(0, 100)
     return f'{letter}{code:02}'
+
 
 def get_random_names(males, females):
     return random.sample(MALE_NAMES, males) + random.sample(FEMALE_NAMES, females)
