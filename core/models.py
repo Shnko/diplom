@@ -173,14 +173,11 @@ class InternationalAdoption(models.Model):
     """
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     date_of_adoption = models.DateField(null=False, verbose_name="дата усыновления")
-    country = models.CharField(null=False, blank=False, max_length=100, verbose_name="страна переезда")
-    last_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("last name"))
-    first_name = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("first name"))
-    patronymic = models.CharField(null=False, blank=False, max_length=100, verbose_name=_("patronymic"))
 
     class Meta:
         verbose_name = "международное усыновление"
         verbose_name_plural = "международное усыновление"
+
 
 class TransferToTreatment(models.Model):
     """
@@ -212,26 +209,12 @@ class TransferByCertainAge(models.Model):
 
 
 
-class WorkWithContingents(models.Model):
-    """
-    Работа с контингентами
-    """
-    icd_code = models.CharField(null=False, blank=False, max_length=100, verbose_name="код диагноза по МКБ")
-    indicator_name = models.CharField(null=False, blank=False, max_length=100, verbose_name="наименование показателей")
-
-    class Meta:
-        verbose_name = "работа с контингентами"
-        verbose_name_plural = "работа с контингентами"
-
-    def __str__(self):
-        return f"{self.id} - {self.indicator_name}"
-
 class ChildSickness(models.Model):
     """
     Заболеваемость детей
     """
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
-    icd_code = models.ForeignKey(WorkWithContingents, on_delete=models.CASCADE)
+    icd_code = models.CharField(null=False, blank=False, max_length=100, verbose_name="код диагноза по МКБ")
     date_of_diagnosis = models.DateField(null=False, verbose_name="дата постановления диагноза")
     class Meta:
         verbose_name = "заболеваемость"

@@ -89,9 +89,7 @@ def create_children():
         elif random.randint(0, 99) <= 5:  # 5% оставшихся
             InternationalAdoption.objects.create(child=child,
                                                  date_of_adoption=get_random_date_between(admission.date_of_admission,
-                                                                                          today),
-                                                 country="Заграница",
-                                                 first_name="X", last_name="X", patronymic="X")
+                                                                                          today))
         # Переведенные в медицинские организации
         elif random.randint(0, 99) <= 5:  # 5% оставшихся
             TransferToTreatment.objects.create(child=child,
