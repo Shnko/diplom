@@ -209,7 +209,7 @@ UNFOLD = {
                 ]
             },
             {
-                "title": "Редактирование",
+                "title": "Контингент",
                 "separator": True,  # Top border
                 "collapsible": False,  # Collapsible group of links
                 "items": [
@@ -222,6 +222,70 @@ UNFOLD = {
                         "title": "Поступление контингента",
                         "icon": "docs",
                         "link": reverse_lazy("admin:core_childadmission_changelist")
+                    },
+                    {
+                        "title": "Дети, отданные под опеку или в приемную семью",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_childcare_changelist")
+                    },
+                    {
+                        "title": "Дети, взятые родителями",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_childreturned_changelist")
+                    },
+                    {
+                        "title": "Переведенные в медицинские организации",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_transfertotreatment_changelist")
+                    },
+                    {
+                        "title": "Усыновленные дети",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_childadopted_changelist")
+                    },
+                    {
+                        "title": "Перевод по достижению возраста",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_transferbycertainage_changelist")
+                    },
+                    {
+                        "title": "Репатриация",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_childrepatriation_changelist")
+                    },
+                    {
+                        "title": "Международное усыновление",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_internationaladoption_changelist")
+                    },
+                ]
+            },
+            {
+                "title": "Сотрудники",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Сотрудники",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_employee_changelist")
+                    },
+                    {
+                        "title": "Трудоустройство",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_employment_changelist")
+                    },
+                ]
+            },
+            {
+                "title": "Общая информация",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Сведения о домах",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_orphanage_changelist")
                     },
                 ]
             },

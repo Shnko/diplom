@@ -8,7 +8,8 @@ from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationFo
 from unfold.admin import ModelAdmin, TabularInline
 
 from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildParent, ChildCare, \
-    AdoptionParent, ChildAdopted, TransferToTreatment, TransferByCertainAge, ChildSickness
+    AdoptionParent, ChildAdopted, TransferToTreatment, TransferByCertainAge, ChildSickness, ChildRepatriation, \
+    InternationalAdoption, Orphanage
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -29,14 +30,21 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
     pass
 
+class ChildDeathInline(TabularInline):
+    model = ChildDeath
 
 @admin.register(Child)
 class ChildAdmin(ModelAdmin):
-    list_display = ['id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'disability_category']
+    list_display = ['id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'disability_category', 'death_date']
     actions_on_top = True
     search_fields = ['first_name', 'last_name', 'patronymic']
-    list_filter = ['date_of_birth']
+    list_filter = ['date_of_birth', 'disability_category', 'childdeath__date_of_death']
     sortable_by = ('id', 'first_name', 'last_name', 'patronymic', 'date_of_birth')
+    inlines = [ChildDeathInline]
+
+    @admin.display(description="Дата смерти")
+    def death_date(self, obj):
+        return obj.childdeath.date_of_death
 
 @admin.register(ChildAdmission)
 class ChildAdmissionAdmin(ModelAdmin):
@@ -45,6 +53,7 @@ class ChildAdmissionAdmin(ModelAdmin):
     @admin.display(description=_('child name'))
     def get_child_name(self, obj):
         return f'{obj.child.last_name} {obj.child.first_name} {obj.child.patronymic}'
+
 
 @admin.register(ChildDeath)
 class ChildDeathAdmin(ModelAdmin):
@@ -99,6 +108,10 @@ class ChildReturnedAdmin(ModelAdmin):
     list_display = ['child', 'date_of_adoption']
     inlines = [AdoptionParentInline]
 
+@admin.register(ChildRepatriation)
+class ChildRepatriationAdmin(ModelAdmin):
+    list_display = ['child', 'date_of_repatriation']
+
 @admin.register(ChildSickness)
 class ChildSicknessAdmin(ModelAdmin):
     list_display = ['child', 'icd_code', 'date_of_diagnosis']
@@ -110,3 +123,11 @@ class TransferToTreatmentAdmin(ModelAdmin):
 @admin.register(TransferByCertainAge)
 class TransferByCertainAgeAdmin(ModelAdmin):
     list_display = ['child', 'date_of_transfer', 'type']
+
+@admin.register(InternationalAdoption)
+class InternationalAdoptionAdmin(ModelAdmin):
+    list_display = ['child', 'date_of_adoption']
+
+@admin.register(Orphanage)
+class OrphanageAdmin(ModelAdmin):
+    list_display = ['location_type', 'count_of_seats']

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from django.core.management import BaseCommand
 
 from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildCare, ChildAdopted, \
-    ChildRepatriation, InternationalAdoption, TransferToTreatment, TransferByCertainAge
+    ChildRepatriation, InternationalAdoption, TransferToTreatment, TransferByCertainAge, Orphanage
 from orphanage.settings import DEBUG
 
 
@@ -30,6 +30,7 @@ def clear():
     InternationalAdoption.objects.all().delete()
     Employee.objects.all().delete()
     Employment.objects.all().delete()
+    Orphanage.objects.all().delete()
 
 
 def create_children():
@@ -37,6 +38,9 @@ def create_children():
     female_count = random.randint(50, 55)
     children_names = get_random_names(male_count, female_count)
     today = datetime.today()
+
+    # дом ребёнка
+    Orphanage.objects.create(location_type="X", count_of_seats=(male_count+female_count)//2)
 
     for full_name in children_names:
         # Ребёнок
