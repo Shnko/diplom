@@ -2,9 +2,7 @@ FROM python:3.13
 
 WORKDIR '/app'
 
-COPY ../../core   ./core
-COPY ../../report ./reporter
-COPY ../../upload ./reporter
+COPY ../../core ./core
 COPY ../../orphanage ./orphanage
 COPY ../../templates ./templates
 COPY ../../manage.py .

@@ -3,9 +3,7 @@
 cd /app
 
 echo Migration.
-python manage.py migrate admin --noinput
-python manage.py migrate auth --noinput
-python manage.py migrate session --noinput
+python manage.py migrate
 
 echo Init Admin.
 python manage.py init_admin

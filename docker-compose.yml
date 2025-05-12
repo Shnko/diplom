@@ -4,7 +4,7 @@ services:
 
   # Основная база данных
   postgresql-master:
-    image: postgres:latest
+    image: postgres:17.5
     container_name: postgresql-master
     user: postgres
     environment:
@@ -45,6 +45,8 @@ services:
       dockerfile: docker/orphanage/Dockerfile
     ports:
       - "8080:8000"
+    environment:
+      DB_HOST: postgresql-master
     depends_on:
       postgresql-master:
         condition: service_healthy
