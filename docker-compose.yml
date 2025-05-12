@@ -52,6 +52,8 @@ services:
         condition: service_healthy
     networks:
       - external
+    profiles:
+      - application
 
 networks:
   external:
