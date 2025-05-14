@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -15,6 +17,43 @@ class Child(models.Model):
         verbose_name_plural = "дети"
     def __str__(self):
         return f"{self.last_name} {self.first_name} {self.patronymic} [{self.date_of_birth}]"
+
+    def get_age_detailed(self) -> str:
+        today = date.today()
+        born = self.date_of_birth
+
+        # Вычисляем разницу
+        years = today.year - born.year
+        months = today.month - born.month
+        days = today.day - born.day
+
+        # Корректируем отрицательные значения
+        if days < 0:
+            months -= 1
+            days += 30  # Упрощённо, без учёта разного количества дней в месяцах
+
+        if months < 0:
+            years -= 1
+            months += 12
+
+        # Склонения слов
+        def plural(n, forms):
+            if n % 10 == 1 and n % 100 != 11:
+                return forms[0]
+            elif 2 <= n % 10 <= 4 and (n % 100 < 10 or n % 100 >= 20):
+                return forms[1]
+            return forms[2]
+
+        # Формируем результат
+        parts = []
+        if years > 0:
+            parts.append(f"{years} {plural(years, ['год', 'года', 'лет'])}")
+        if months > 0:
+            parts.append(f"{months} {plural(months, ['месяц', 'месяца', 'месяцев'])}")
+        if days > 0 or not parts:  # Показываем дни, если нет других значений
+            parts.append(f"{days} {plural(days, ['день', 'дня', 'дней'])}")
+
+        return ' '.join(parts) or "0 дней"
 
 class ChildAdmission(models.Model):
     """
