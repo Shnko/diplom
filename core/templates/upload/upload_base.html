@@ -14,8 +14,8 @@
       <ul class="flex flex-wrap">
         {% url 'admin:index' as link %}
         {% include 'unfold/helpers/breadcrumb_item.html' with link=link name='Начало' %}
-        {% url 'reports_index' as link %}
-        {% include 'unfold/helpers/breadcrumb_item.html' with link=link name='Отчёты' %}
+        {% url 'admin:index' as link %}
+        {% include 'unfold/helpers/breadcrumb_item.html' with link=link name='Загрузки' %}
         {% include 'unfold/helpers/breadcrumb_item.html' with link=None name=title %}
       </ul>
     </div>
@@ -23,7 +23,7 @@
 {% endif %}{% endblock %}
 
 {% block content %}
-  <form action="" method="post" novalidate>
+  <form action="" method="post" novalidate enctype="multipart/form-data">
     <div class="aligned border border-base-200 mb-8 rounded-md pt-3 px-3 shadow-sm dark:border-base-800">
       {% csrf_token %}
 
@@ -35,7 +35,7 @@
 
     <div class="flex justify-end">
       {% component "unfold/components/button.html" with submit=1 %}
-        {% trans "Сформировать отчёт" %}
+        {% trans "Загрузить данные" %}
       {% endcomponent %}
     </div>
   </form>

@@ -1,14 +1,14 @@
 import sys
 from inspect import isclass
 
-from django.http import FileResponse, HttpResponse, HttpResponseRedirect
+from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import FormView, TemplateView
 from unfold.views import UnfoldModelAdminViewMixin
 
-from core.forms import DateRangeInputForm
-from core.models import Child
+from core.forms import DateRangeInputForm, FileInputForm
 from core.reports import build_report_2120, build_report_summary
+from core.uploads import upload_2145, upload_2146
 
 
 # Create your views here.
@@ -24,7 +24,7 @@ class ReportsIndexView(UnfoldModelAdminViewMixin, TemplateView):
         super().__init__(model_admin, **kwargs)
         reports = []
         for item in vars(sys.modules[__name__]).items():
-            if isclass(item[1]) and issubclass(item[1], FormView) and issubclass(item[1], UnfoldModelAdminViewMixin):
+            if item[0].startswith('Report') and isclass(item[1]) and issubclass(item[1], FormView) and issubclass(item[1], UnfoldModelAdminViewMixin):
                 reports += [{"title": item[1].title, "url": item[1].reverse_name}]
         self.extra_context = {
             "reports": reports,
@@ -127,3 +127,33 @@ class Report2150View(UnfoldModelAdminViewMixin, FormView):
 
     def get_success_url(self):
         return reverse(self.reverse_name)
+
+class Upload2145View(UnfoldModelAdminViewMixin, FormView):
+    template_name = "upload/upload_base.html"
+    title = "Загрузка результатов профилактической работы с детьми"
+    form_class = FileInputForm
+    permission_required = ()
+    reverse_name = 'upload_2145'
+
+    def post(self, request, *args, **kwargs):
+        form = FileInputForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload_2145(request.FILES["file"])
+            return HttpResponseRedirect('#success')
+        else:
+            return HttpResponseRedirect('#error')
+
+class Upload2146View(UnfoldModelAdminViewMixin, FormView):
+    template_name = "upload/upload_base.html"
+    title = "Загрузка данных по работе с контингентами"
+    form_class = FileInputForm
+    permission_required = ()
+    reverse_name = 'upload_2146'
+
+    def post(self, request, *args, **kwargs):
+        form = FileInputForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload_2146(request.FILES["file"])
+            return HttpResponseRedirect('#success')
+        else:
+            return HttpResponseRedirect('#error')

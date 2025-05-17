@@ -209,6 +209,23 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "Загрузка",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Профилактика (2145)",
+                        "icon": "docs",
+                        "link": reverse_lazy("upload_2145")
+                    },
+                    {
+                        "title": "Работа с контингентами (2146)",
+                        "icon": "docs",
+                        "link": reverse_lazy("upload_2146")
+                    },
+                ]
+            },
+            {
                 "title": "Контингент",
                 "separator": True,  # Top border
                 "collapsible": False,  # Collapsible group of links

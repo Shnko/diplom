@@ -56,4 +56,14 @@ urlpatterns = [
         Report2150View.as_view(model_admin=ReportsModel),
         name='report_2150'
     ),
+    path(
+        'uploads/2145/',
+        Upload2145View.as_view(model_admin=ReportsModel),
+        name='upload_2145'
+    ),
+    path(
+        'uploads/2146/',
+        Upload2146View.as_view(model_admin=ReportsModel),
+        name='upload_2146'
+    ),
 ]
