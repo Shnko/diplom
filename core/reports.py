@@ -5,8 +5,11 @@ from uuid import uuid4
 import openpyxl
 import random
 
-from core.models import Orphanage, Employee, Employment, ChildAdmission, ChildReturned, ChildCare, ChildAdopted, \
-    ChildRepatriation, InternationalAdoption, TransferToTreatment, TransferByCertainAge, ChildDeath
+from django.db.models import Q, Sum
+
+from core.models import Orphanage, Employment, ChildAdmission, ChildReturned, ChildCare, ChildAdopted, \
+    ChildRepatriation, InternationalAdoption, TransferToTreatment, TransferByCertainAge, ChildDeath, PositionCategory, \
+    PlannedRates
 from orphanage.settings import BASE_DIR
 
 
@@ -58,81 +61,222 @@ def build_report_summary(start, end):
     spreadsheet["A6"].value = 1
     orphanage = Orphanage.objects.first()
     spreadsheet["B6"].value = 1
-    spreadsheet["D6"].value = orphanage.count_of_seats
+    spreadsheet["F6"].value = orphanage.count_of_seats
 
     # заполнение таблицы данными 2 Штаты организации, человек
-    employees = Employee.objects.all()
-    spreadsheet["C16"].value = Employment.objects.filter(end_date_of_employment__isnull=True).count()
 
-    spreadsheet["D16"].value = Employment.objects.filter(
-        report_category=Employment.PositionCategory.DOCTOR,
-        end_date_of_employment__isnull=True).count()
+    plan_teachers = PlannedRates.objects.filter(category='6').aggregate(Sum('count'))['count__sum']
+    plan_others = PlannedRates.objects.filter(category='8').aggregate(Sum('count'))['count__sum']
 
-    spreadsheet["E16"].value = Employment.objects.filter(
-        report_category=Employment.PositionCategory.NON_MEDICAL_STAFF,
-        end_date_of_employment__isnull=True).count()
+    spreadsheet["C16"].value = PlannedRates.objects.aggregate(Sum('count'))['count__sum']
+    spreadsheet["D16"].value = PlannedRates.objects.filter(category='1').aggregate(Sum('count'))['count__sum']
+    spreadsheet["G16"].value = PlannedRates.objects.filter(category='2').aggregate(Sum('count'))['count__sum']
+    spreadsheet["J16"].value = plan_others + plan_teachers
+    spreadsheet["M16"].value = plan_teachers
 
-    spreadsheet["F16"].value = Employment.objects.filter(
-        report_category=Employment.PositionCategory.PHARMACIST,
-        end_date_of_employment__isnull=True).count()
+    spreadsheet["C17"].value = Employment.objects.filter(
+        Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end))).count()
 
-    spreadsheet["G16"].value = Employment.objects.filter(
-        report_category=Employment.PositionCategory.LINEAR_MEDICAL_STAFF,
-        end_date_of_employment__isnull=True).count()
+    spreadsheet["D17"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.DOCTOR) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["E17"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.NON_MEDICAL_STAFF) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["F17"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.PHARMACIST) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["G17"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.LINEAR_MEDICAL_STAFF) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["H17"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.APOTHECARY) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["I17"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.JUNIOR_MEDICAL_STAFF) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    teachers = Employment.objects.filter(
+        Q(report_category=PositionCategory.TEACHER) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    others = Employment.objects.filter(
+        Q(report_category=PositionCategory.OTHERS) &
+        (Q(end_date_of_employment__isnull=True) | Q(end_date_of_employment__range=(start, end)))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["J17"].value = others + teachers
+
+    spreadsheet["M17"].value = teachers
+
+    spreadsheet["C18"].value = Employment.objects.filter(
+        Q(end_date_of_employment__range=(start, end))).count()
+
+    spreadsheet["D18"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.DOCTOR) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["E18"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.NON_MEDICAL_STAFF) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["F18"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.PHARMACIST) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["G18"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.LINEAR_MEDICAL_STAFF) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["H18"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.APOTHECARY) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["I18"].value = Employment.objects.filter(
+        Q(report_category=PositionCategory.JUNIOR_MEDICAL_STAFF) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    teachers = Employment.objects.filter(
+        Q(report_category=PositionCategory.TEACHER) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    others = Employment.objects.filter(
+        Q(report_category=PositionCategory.OTHERS) &
+        Q(end_date_of_employment__range=(start, end))).aggregate(
+        Sum('rate'))['rate__sum']
+
+    spreadsheet["J18"].value = others + teachers
+
+    spreadsheet["M18"].value = teachers
 
     # заполнение таблицы данными 3 Контингенты дома ребенка, человек
-    spreadsheet["C29"].value = ChildAdmission.objects.count()
+    orphan_child = ChildAdmission.objects.filter(
+        Q(admission_type=ChildAdmission.AdmissionType.ORPHAN
+          ) & Q(date_of_admission__range=(start, end))).count()
 
-    spreadsheet["C30"].value = ChildAdmission.objects.filter(
-        admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE).count()
+    without_care_child = ChildAdmission.objects.filter(
+        Q(admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_admission__range=(start, end))).count()
 
-    spreadsheet["C31"].value = ChildAdmission.objects.filter(
-        admission_type=ChildAdmission.AdmissionType.ORPHAN).count()
+    spreadsheet["C29"].value = ChildAdmission.objects.filter(Q(date_of_admission__range=(start, end))).count()
+    spreadsheet["C30"].value = without_care_child
+    spreadsheet["C31"].value = orphan_child
 
-    returned_child = ChildReturned.objects.count()
-    child_care = ChildCare.objects.count()
-    child_adoption = ChildAdopted.objects.count()
-    repatriation = ChildRepatriation.objects.count()
-    internation_adoption = InternationalAdoption.objects.count()
-    transfer_to_treatment = TransferByCertainAge.objects.count()
-    transfer_by_age = TransferByCertainAge.objects.count()
-    summa = returned_child + child_care + child_adoption + repatriation + internation_adoption + transfer_to_treatment + transfer_by_age
-
-    spreadsheet["D29"].value = summa
-
-    orphan_child_ids = ChildAdmission.objects.filter(
-        admission_type=ChildAdmission.AdmissionType.ORPHAN
-    ).values_list('child_id', flat=True)
-
-    discharged_orphans_count = (
-            ChildReturned.objects.filter(child_id__in=orphan_child_ids).count() +
-            ChildCare.objects.filter(child_id__in=orphan_child_ids).count() +
-            ChildAdopted.objects.filter(child_id__in=orphan_child_ids).count() +
-            ChildRepatriation.objects.filter(child_id__in=orphan_child_ids).count() +
-            InternationalAdoption.objects.filter(child_id__in=orphan_child_ids).count() +
-            TransferToTreatment.objects.filter(child_id__in=orphan_child_ids).count() +
-            TransferByCertainAge.objects.filter(child_id__in=orphan_child_ids).count()
-    )
-
-    spreadsheet["D30"].value = discharged_orphans_count
-
-    without_care_child_ids = ChildAdmission.objects.filter(
-        admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    ).values_list('child_id', flat=True)
-
-    discharged_orphans_count = (
-            ChildReturned.objects.filter(child_id__in=without_care_child_ids).count() +
-            ChildCare.objects.filter(child_id__in=without_care_child_ids).count() +
-            ChildAdopted.objects.filter(child_id__in=without_care_child_ids).count() +
-            ChildRepatriation.objects.filter(child_id__in=without_care_child_ids).count() +
-            InternationalAdoption.objects.filter(child_id__in=without_care_child_ids).count() +
-            TransferToTreatment.objects.filter(child_id__in=without_care_child_ids).count() +
-            TransferByCertainAge.objects.filter(child_id__in=without_care_child_ids).count()
-    )
-
-    spreadsheet["D31"].value = discharged_orphans_count
+    # ORPHAN
+    # orphan_child_care_count = ChildCare.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_admission__range=(start, end))).count()
+    #
+    # orphan_child_adopted_count = ChildAdopted.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_adoption__range=(start, end))).count()
+    #
+    # orphan_child_returned_count = ChildReturned.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_adoption__range=(start, end))).count()
+    #
+    # orphan_child_international_adoption_count = InternationalAdoption.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_adoption__range=(start, end))).count()
+    #
+    # orphan_child_repatriation_count = ChildRepatriation.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_repatriation__range=(start, end))).count()
+    #
+    # orphan_transfer_to_treatment_count = TransferToTreatment.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_transfer__range=(start, end))).count()
+    #
+    # orphan_transfer_by_age_count = TransferByCertainAge.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+    #       ) & Q(date_of_transfer__range=(start, end))).count()
+    #
+    # spreadsheet["D31"].value = orphan_child_care_count + orphan_child_adopted_count + orphan_child_returned_count + orphan_child_international_adoption_count + orphan_child_repatriation_count + orphan_transfer_to_treatment_count + orphan_transfer_by_age_count
+    #
+    # WITHOUT_CARE
+    # care_child_care_count = ChildCare.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_admission__range=(start, end))).count()
+    #
+    # care_child_adopted_count = ChildAdopted.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_adoption__range=(start, end))).count()
+    #
+    # care_child_returned_count = ChildReturned.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_adoption__range=(start, end))).count()
+    #
+    # care_child_international_adoption_count = InternationalAdoption.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_adoption__range=(start, end))).count()
+    #
+    # care_child_repatriation_count = ChildRepatriation.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_repatriation__range=(start, end))).count()
+    #
+    # care_transfer_to_treatment_count = TransferToTreatment.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_transfer__range=(start, end))).count()
+    #
+    # care_transfer_by_age_count = TransferByCertainAge.objects.filter(
+    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+    #       ) & Q(date_of_transfer__range=(start, end))).count()
 
     spreadsheet["F29"].value = ChildDeath.objects.count()
+
+    # заполнение таблицы данными 4 Движение контингентов дома ребенка, человек
+
+    spreadsheet["A42"].value = ChildReturned.objects.filter(
+        Q(date_of_adoption__range=(start, end))).count()
+
+    spreadsheet["B42"].value = ChildAdopted.objects.filter(
+        Q(date_of_adoption__range=(start, end))).count()
+
+    spreadsheet["D42"].value = TransferByCertainAge.objects.filter(
+        Q(type=TransferByCertainAge.InstitutionType.EDUCATION_INST) &
+        Q(date_of_transfer__range=(start, end))).count()
+
+    spreadsheet["E42"].value = TransferByCertainAge.objects.filter(
+        Q(type=TransferByCertainAge.InstitutionType.SOCIAL_SAFE_INST) &
+        Q(date_of_transfer__range=(start, end))).count()
+
+    spreadsheet["F42"].value = InternationalAdoption.objects.filter(
+        Q(date_of_adoption__range=(start, end))).count()
+
+    spreadsheet["H42"].value = ChildCare.objects.filter(
+        Q(care_type=ChildCare.CareType.WARDERED) &
+        Q(date_of_adoption__range=(start, end))).count()
+
+    spreadsheet["J42"].value = ChildCare.objects.filter(
+        Q(care_type=ChildCare.CareType.FOSTER_FAMILY) &
+        Q(date_of_adoption__range=(start, end))).count()
+
+    spreadsheet["L42"].value = ChildRepatriation.objects.filter(
+        Q(date_of_repatriation__range=(start, end))).count()
+
+    spreadsheet["M42"].value = TransferToTreatment.objects.filter(
+        Q(date_of_transfer__range=(start, end))).count()
+
+    # заполнение таблицы данными 5 Профилактические осмотри
 
     # сохранение файла во временный файл
     workbook.save(destination)

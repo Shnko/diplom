@@ -292,6 +292,11 @@ UNFOLD = {
                         "icon": "docs",
                         "link": reverse_lazy("admin:core_employment_changelist")
                     },
+                    {
+                        "title": "Штатное расписание",
+                        "icon": "docs",
+                        "link": reverse_lazy("admin:core_plannedrates_changelist")
+                    },
                 ]
             },
             {

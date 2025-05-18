@@ -100,20 +100,20 @@ class Employee(models.Model):
     def __str__(self):
         return f"{self.last_name} {self.first_name} {self.patronymic}"
 
+class PositionCategory(models.TextChoices):
+    DOCTOR = "1", "Врач"
+    LINEAR_MEDICAL_STAFF = "2", "Средний медицинский персонал"
+    JUNIOR_MEDICAL_STAFF = "3", "Младший медицинский персонал"
+    PHARMACIST = "4", "Провизор"
+    APOTHECARY = "5", "Фармацевт"
+    TEACHER = "6", "Педагогический персонал"
+    NON_MEDICAL_STAFF = "7", "Специалисты с высшим не медицинским образованием"
+    OTHERS = "8", "Прочий персонал"
 
 class Employment(models.Model):
     """
     Трудоустройства
     """
-    class PositionCategory(models.TextChoices):
-        DOCTOR = "1", "Врач"
-        LINEAR_MEDICAL_STAFF = "2", "Средний медицинский персонал"
-        JUNIOR_MEDICAL_STAFF = "3", "Младший медицинский персонал"
-        PHARMACIST = "4", "Провизор"
-        APOTHECARY = "5", "Фармацевт"
-        TEACHER = "6", "Педагогический персонал"
-        NON_MEDICAL_STAFF = "7", "Специалисты с высшим не медицинским образованием"
-        OTHERS = "8", "Прочий персонал"
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="сотрудник")
     rate = models.DecimalField(null=False, blank=False, max_digits=4, decimal_places=2, verbose_name="ставка")
@@ -124,6 +124,17 @@ class Employment(models.Model):
     class Meta:
         verbose_name = "трудоустройство"
         verbose_name_plural = "трудоустройства"
+
+class PlannedRates(models.Model):
+    """
+    Штатное расписание
+    """
+    category = models.CharField(choices=PositionCategory, verbose_name="категория")
+    count = models.DecimalField(null=False, blank=False, max_digits=6, decimal_places=2, verbose_name="количество")
+
+    class Meta:
+        verbose_name = "штатное расписание"
+        verbose_name_plural = "штатное расписание"
 
 
 class ChildReturned(models.Model):

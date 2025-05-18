@@ -9,7 +9,7 @@ from unfold.admin import ModelAdmin, TabularInline
 
 from core.models import Child, ChildAdmission, ChildDeath, Employee, Employment, ChildReturned, ChildParent, ChildCare, \
     AdoptionParent, ChildAdopted, TransferToTreatment, TransferByCertainAge, ChildSickness, ChildRepatriation, \
-    InternationalAdoption, Orphanage, Checkup
+    InternationalAdoption, Orphanage, Checkup, PlannedRates
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -136,3 +136,7 @@ class CheckupAdmin(ModelAdmin):
 @admin.register(Orphanage)
 class OrphanageAdmin(ModelAdmin):
     list_display = ['location_type', 'count_of_seats']
+
+@admin.register(PlannedRates)
+class PlannedRatesAdmin(ModelAdmin):
+    list_display = ['category', 'count']
