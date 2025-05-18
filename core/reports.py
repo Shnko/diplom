@@ -181,65 +181,65 @@ def build_report_summary(start, end):
     spreadsheet["C30"].value = without_care_child
     spreadsheet["C31"].value = orphan_child
 
+    orphan_admission_type_query =  Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+          ) & Q(date_of_adoption__range=(start, end))
+
     # ORPHAN
-    # orphan_child_care_count = ChildCare.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_admission__range=(start, end))).count()
-    #
-    # orphan_child_adopted_count = ChildAdopted.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_adoption__range=(start, end))).count()
-    #
-    # orphan_child_returned_count = ChildReturned.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_adoption__range=(start, end))).count()
-    #
-    # orphan_child_international_adoption_count = InternationalAdoption.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_adoption__range=(start, end))).count()
-    #
-    # orphan_child_repatriation_count = ChildRepatriation.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_repatriation__range=(start, end))).count()
-    #
-    # orphan_transfer_to_treatment_count = TransferToTreatment.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_transfer__range=(start, end))).count()
-    #
-    # orphan_transfer_by_age_count = TransferByCertainAge.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.ORPHAN
-    #       ) & Q(date_of_transfer__range=(start, end))).count()
-    #
-    # spreadsheet["D31"].value = orphan_child_care_count + orphan_child_adopted_count + orphan_child_returned_count + orphan_child_international_adoption_count + orphan_child_repatriation_count + orphan_transfer_to_treatment_count + orphan_transfer_by_age_count
-    #
+    orphan_child_care_count = ChildCare.objects.filter(orphan_admission_type_query).count()
+
+    orphan_child_adopted_count = ChildAdopted.objects.filter(orphan_admission_type_query).count()
+
+    orphan_child_returned_count = ChildReturned.objects.filter(orphan_admission_type_query).count()
+
+    orphan_child_international_adoption_count = InternationalAdoption.objects.filter(orphan_admission_type_query).count()
+
+    orphan_child_repatriation_count = ChildRepatriation.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+          ) & Q(date_of_repatriation__range=(start, end))).count()
+
+    orphan_transfer_to_treatment_count = TransferToTreatment.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+          ) & Q(date_of_transfer__range=(start, end))).count()
+
+    orphan_transfer_by_age_count = TransferByCertainAge.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.ORPHAN
+          ) & Q(date_of_transfer__range=(start, end))).count()
+
+    spreadsheet["D31"].value = orphan_child_care_count + orphan_child_adopted_count + orphan_child_returned_count + orphan_child_international_adoption_count + orphan_child_repatriation_count + orphan_transfer_to_treatment_count + orphan_transfer_by_age_count
+
     # WITHOUT_CARE
-    # care_child_care_count = ChildCare.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_admission__range=(start, end))).count()
-    #
-    # care_child_adopted_count = ChildAdopted.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_adoption__range=(start, end))).count()
-    #
-    # care_child_returned_count = ChildReturned.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_adoption__range=(start, end))).count()
-    #
-    # care_child_international_adoption_count = InternationalAdoption.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_adoption__range=(start, end))).count()
-    #
-    # care_child_repatriation_count = ChildRepatriation.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_repatriation__range=(start, end))).count()
-    #
-    # care_transfer_to_treatment_count = TransferToTreatment.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_transfer__range=(start, end))).count()
-    #
-    # care_transfer_by_age_count = TransferByCertainAge.objects.filter(
-    #     Q(child__admission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
-    #       ) & Q(date_of_transfer__range=(start, end))).count()
+    care_child_care_count = ChildCare.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_adoption__range=(start, end))).count()
+
+    care_child_adopted_count = ChildAdopted.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_adoption__range=(start, end))).count()
+
+    care_child_returned_count = ChildReturned.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_adoption__range=(start, end))).count()
+
+    care_child_international_adoption_count = InternationalAdoption.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_adoption__range=(start, end))).count()
+
+    care_child_repatriation_count = ChildRepatriation.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_repatriation__range=(start, end))).count()
+
+    care_transfer_to_treatment_count = TransferToTreatment.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_transfer__range=(start, end))).count()
+
+    care_transfer_by_age_count = TransferByCertainAge.objects.filter(
+        Q(child__childadmission__admission_type=ChildAdmission.AdmissionType.WITHOUT_CARE
+          ) & Q(date_of_transfer__range=(start, end))).count()
+
+    spreadsheet["D30"].value = (care_child_care_count + care_child_adopted_count + care_child_returned_count +
+                                care_child_international_adoption_count + care_child_repatriation_count +
+                                care_child_repatriation_count + care_transfer_to_treatment_count +
+                                care_transfer_by_age_count)
 
     spreadsheet["F29"].value = ChildDeath.objects.count()
 
