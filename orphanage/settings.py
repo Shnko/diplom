@@ -151,7 +151,7 @@ UNFOLD = {
     "SITE_SYMBOL": "house",  # symbol from icon set https://fonts.google.com/icons
     "SIDEBAR": {
         "show_search": False,
-        "show_all_applications": True,
+        "show_all_applications": False,
         "navigation": [
             {
                 "title": "Отчётность",
@@ -163,48 +163,6 @@ UNFOLD = {
                         "icon": "article",
                         "link": reverse_lazy("report_summary"),
 
-                    },
-                    {
-                        #"title": "Отчёт 1000 - Дома ребёнка",
-                        "title": "Дома ребёнка",
-                        "icon": "article",
-                        "link": reverse_lazy("report_1000"),
-                    },
-                    {
-                        #"title": "Отчёт 2100 - Штаты организации",
-                        "title": "Штаты организации",
-                        "icon": "article",
-                        "link": reverse_lazy("report_2100"),
-                    },
-                    {
-                        #"title": "Отчёт 2120 - Контингенты дома ребёнка",
-                        "title": "Контингенты дома ребёнка",
-                        "icon": "article",
-                        "link": reverse_lazy("report_2120"),
-                    },
-                    {
-                        #"title": "Отчёт 2140 - Движение контингентов дома ребёнка",
-                        "title": "Движение контингентов",
-                        "icon": "article",
-                        "link": reverse_lazy("report_2140"),
-                    },
-                    {
-                        #"title": "Отчёт 2145 - Профилактические осмотры детей и их результаты",
-                        "title": "Профилактические осмотры",
-                        "icon": "article",
-                        "link": reverse_lazy("report_2145"),
-                    },
-                    {
-                        #"title": "Отчёт 2146 - Работа с контингентами детей, находящихся в доме ребёнка",
-                        "title": "Работа с контингентами детей",
-                        "icon": "article",
-                        "link": reverse_lazy("report_2146"),
-                    },
-                    {
-                        #"title": "Отчёт 2150 - Заболеваемость детей",
-                        "title": "Заболеваемость детей",
-                        "icon": "article",
-                        "link": reverse_lazy("report_2150"),
                     },
                 ]
             },
