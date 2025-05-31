@@ -7,7 +7,7 @@ from django.views.generic import FormView, TemplateView
 from unfold.views import UnfoldModelAdminViewMixin
 
 from core.forms import DateRangeInputForm, FileInputForm
-from core.reports import build_report_2120, build_report_summary
+from core.reports import build_report_summary
 from core.uploads import upload_2145, upload_2146
 
 
@@ -47,86 +47,6 @@ class ReportSummaryView(UnfoldModelAdminViewMixin, FormView):
             return FileResponse(open(report_file_name, 'rb'), as_attachment=True, filename=f'{self.title}.xlsx')
         else:
             return HttpResponseRedirect('#')
-
-
-class Report1000View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 1000 - Дома ребёнка"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = 'report_1000'
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
-
-class Report2100View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 2100 - Штаты организации"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = "report_2100"
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
-
-class Report2120View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 2120 - Контингенты дома ребёнка"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = "report_2120"
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
-
-    def post(self, request, *args, **kwargs):
-        form = DateRangeInputForm(request.POST)
-        if form.is_valid():
-            report_file_name = build_report_2120(form.cleaned_data['start'], form.cleaned_data['end'])
-            return FileResponse(open(report_file_name, 'rb'), as_attachment=True, filename=f'{self.title}.xlsx')
-        else:
-            return HttpResponseRedirect('#')
-
-
-class Report2140View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 2140 - Движение контингентов дома ребёнка"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = "report_2140"
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
-
-class Report2145View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 2145 - Профилактические осмотры детей и их результаты"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = 'report_2145'
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
-
-class Report2146View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 2146 - Работа с контингентами детей, находящихся в доме ребёнка"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = 'report_2146'
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
-
-class Report2150View(UnfoldModelAdminViewMixin, FormView):
-    template_name = "reports/reports_base.html"
-    title = "Отчёт 2150 - Заболеваемость детей"
-    form_class = DateRangeInputForm
-    permission_required = ()
-    reverse_name = 'report_2150'
-
-    def get_success_url(self):
-        return reverse(self.reverse_name)
 
 class Upload2145View(UnfoldModelAdminViewMixin, FormView):
     template_name = "upload/upload_base.html"
